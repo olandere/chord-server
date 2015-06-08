@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container-fluid">
+    <h1>Chord charts - beta</h1>
+    The <strong>Chord</strong> field accepts a variety of inputs - Chord names (e.g. Am, GM9, F#m7b5), chord fingerings (x 0 2 2 2 0),
+    comma separated lists of chord names or fingerings, and chord names with any of the commands below prefixed to them.
+    <h3>Commands</h3>
+    <ul>
+        <li>root: - Renders the chord with the Root note (R) as the lowest note.</li>
+        <li>drop2: - Renders the chord in Drop 2 voicing.</li>
+        <li>drop24: - Renders the chord in Drop 2 and 4 voicing.</li>
+        <li>shell: - Renders the chord as a shell chord (no 5, and only the highest extension).</li>
+    </ul>
+    <h3>Examples</h3>
+    <ul>
+        <li>Am7 - Renders all possible fingerings of the Am7 chord.</li>
+        <li>Am7@5 - Renders all possible fingerings of the Am7 chord with at least 1 note at the 5th fret.</li>
+        <li>drop2: Am7 - Renders all possible fingerings of the Am7 chord using Drop 2 voicing.</li>
+        <li>Am7, D7, GM7 - Renders the closest fingerings for the three chords making up this progression.</li>
+        <li>root: Am7, drop2: D7, shell: GM9 - Yes, you can get this specific!</li>
+        <li>0 2 2 1 0 0 - Identifies most likely chord (E) and renders it.</li>
+        <li>0 2 2 1 0 0, x 0 2 2 1 0 - Identifies and renders this list of chords (E and Am).</li>
+    </ul>
+    (<strong>NOTE:</strong> <em>The code for the chord progressions currently just uses a distance measure between the chords, so
+    it makes odd choices at times.  Ideally it would take voice leading into account too so that they sound 'right'.</em>)
+    <footer class="footer">
+        <hr>
+        <h3>Built with:</h3>
+        <img src="images/AngularJS-small.png" height="50"><img src="images/d3js.svg" height="50">
+        <img src="images/Scala_logo_transparent.png" height="50"><img src="images/Scalatra_Logo.png" height="50">
+    </footer>
+    </div>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-62560826-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+</body>
+</html>
