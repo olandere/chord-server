@@ -1,0 +1,15 @@
+.chord {
+  padding-top:   25px;
+  padding-left:  10px;
+  padding-right: 10px;
+  float:         left;
+}
+
+.footer {
+  clear: both;
+}
+
+img {
+  padding-left:  3px;
+  padding-right: 3px;
+}
