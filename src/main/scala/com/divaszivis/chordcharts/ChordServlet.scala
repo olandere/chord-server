@@ -26,7 +26,7 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
   private def fretlistToJson(c:FretList, chord: Chord)(implicit tuning: Tuning) = {
     Map("frets" -> frettingToJson(c.shows),
       "degrees" -> chord.asDegrees(c).shows.split(" "),
-      "name" -> chord.name)
+      "name" -> chord.toString())
   }
 
   private def showFingerings(chord: Chord, span: Int, fret: Option[Int], condense: Boolean)(implicit tuning: Tuning) = {
@@ -45,13 +45,6 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
 
   private def parseChord(c: String) = {
     InputParser(c)
-    //  val inputParser = """\s*((\w+):)?\s*([\w|[♯#b♭/+]|\s*]+)(@(\d+))?""".r
-//      c match {
-//        case inputParser(_, operation, chord, _, fret) =>
-//          println(s"operation: $operation, chord: $chord")
-//          (Option(chord).map{c=>Command(Option(operation))(Chord(normalize(c)))}, Option(fret).map(_.toInt))
-//        case _ => (None, None)
-//      }
   }
 
   //todo: collapse API - probably no need for /chord and /chordprogression to be distinct
@@ -68,16 +61,6 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
     }
   }
 
-  get("/shellchord/:span?") { //todo: handle progressions
-    val (name, fret) = (params.get("name") map parseChord).get.head
-    val condense = params.getOrElse("condense", "false").toBoolean
-    if (!name.isValid) halt(400) else {
-      val span = params.getOrElse("span", "6").toInt
-      val tuning = params.get("tuning").map(t => Tuning(t)).getOrElse(Tuning.StandardTuning)
-      showFingerings(Shell(name), span, fret, condense)
-    }
-  }
-
   get("/analyze/:fingering") {
     val fingerings = params.get("fingering").get.split(",").map{_.trim}
     implicit val tuning = params.get("tuning").map(t => Tuning(t)).getOrElse(Tuning.StandardTuning)
@@ -89,25 +72,31 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
     result.toList
     // val chord = Chord.unapply(fingering)
     // List(Map("frets" -> frettingToJson(fingering), "degrees" -> "", "name" -> ""))
-   }
+  }
 
-  get("/chords/:span?") {
-    val chords = params.get("chord").get.urlDecode.split(",").map{c=>parseChord(c)}.toList
+  get("/shellchord/:span?") {
+    handleChords(ShellInputParser)
+  }
 
+  def handleChords(parser: InputParser) = {
+    val chords = parser(normalize(params.get("chord").get.urlDecode))
     val condense = params.getOrElse("condense", "false").toBoolean
     info(s"received $chords")
     val span = params.getOrElse("span", "6").toInt
-    //val condense = params.getOrElse("condense", "false").toBoolean
     implicit val tuning = params.get("tuning").map(t => Tuning(t)).getOrElse(Tuning.StandardTuning)
     info(s"tuning: $tuning")
     if (chords.size == 1) {
-      showFingerings(chords.head.head._1, span, chords.head.head._2, condense)
+      showFingerings(chords.head._1, span, chords.head._2, condense)
     } else {
       val chordList = chords.map {
-        _.head._1
+        _._1
       }
       progression(chordList, span).flatten.zip((Stream continually chordList).flatten).map { case (f, c) => fretlistToJson(f, c)}
     }
+  }
+
+  get("/chords/:span?") {
+    handleChords(InputParser)
   }
 
   get("/") {

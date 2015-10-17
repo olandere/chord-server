@@ -1,20 +1,20 @@
 package com.divaszivis.chordcharts
 
-import chord.{InvalidChord, Chord, ChordParser}
+import chord.{ShellChord, InvalidChord, Chord, ChordParser}
 import grizzled.slf4j.Logging
 
 /**
  * Created by eolander on 6/7/15.
  */
-object InputParser extends ChordParser with Logging {
+class InputParser extends ChordParser with Logging {
 
-  val drop2 = "drop2" ~> ":".? ~> chord ^^ {ch => Drop2(ch)}
+  val drop2 = """(?i)drop2""".r ~> ":".? ~> chord ^^ {ch => Drop2(ch)}
 
-  val rootPos = "root" ~> ":".? ~> chord ^^ {ch => Root(ch)}
+  val rootPos = """(?i)root""".r ~> ":".? ~> chord ^^ {ch => Root(ch)}
 
-  val drop24 = "drop24" ~> ":".? ~> chord ^^ {ch => Drop24(ch)}
+  val drop24 = """(?i)drop24""".r ~> ":".? ~> chord ^^ {ch => Drop24(ch)}
 
-  val shell = "shell" ~> ":".? ~> chord ^^ {ch => Shell(ch)}
+  val shell = """(?i)shell""".r ~> ":".? ~> chord ^^ {ch => Shell(ch)}
 
   val noop = chord ^^ {Noop(_)}
 
@@ -26,6 +26,19 @@ object InputParser extends ChordParser with Logging {
 
   def apply(input: String): List[(Chord, Option[Int])] = parseAll(parseIt, input) match {
     case Success(result, _) => result
+    case failure : NoSuccess =>
+      error(failure.msg)
+      List((InvalidChord, None))
+  }
+}
+
+object InputParser extends InputParser
+
+object ShellInputParser extends InputParser {
+  //override val noop = chord ^^ {Shell(_)}
+
+  override def apply(input: String): List[(Chord, Option[Int])] = parseAll(parseIt, input) match {
+    case Success(result, _) => println(result);result.map{case (c, i) => println(c);(ShellChord(c), i)}
     case failure : NoSuccess =>
       error(failure.msg)
       List((InvalidChord, None))
