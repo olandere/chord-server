@@ -13,3 +13,21 @@ img {
   padding-left:  3px;
   padding-right: 3px;
 }
+
+
+g>line {
+  shape-rendering: crispEdges;
+}
+
+g>circle {
+  shape-rendering: geometricPrecision;
+}
+
+.spinner {
+  display: block;
+  height: 200px;
+  width: 200px;
+  position: relative !important;
+  margin-top: 60px;
+  margin-bottom: 0px;
+}

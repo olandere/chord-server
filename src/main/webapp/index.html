@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="css/app.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js" charset="utf-8"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js" charset="utf-8"></script>
+    <script src="http://fgnass.github.io/spin.js/spin.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script src="node_modules/angular-spinner/angular-spinner.min.js" charset="utf-8"></script>
     <script src="js/controllers.js"></script>
     <script src="directives/chord.js"></script>
     <title>Chord charts - beta</title>
@@ -41,10 +43,11 @@
       <label>Tuning:</label>
       <input type="text" ng-model="myData.tuning" class="form-control" placeholder="E A D G B E" value="E A D G B E">
     </div>
-    <button ng-click="myData.doClick(item, $event)" class="btn btn-primary">Submit</button>
+    <button ng-disabled="isDisabled" ng-click="myData.doClick(item, $event)" class="btn btn-primary">Submit</button>
       <a href="help.html">How do I use this???</a>
   </form>
   <hr>
+  <span us-spinner="{lines: 11, length: 0, width: 14, radius: 28, opacity:0.05}" spinner-key="spinner-1"></span>
   <div class="chords">
     <div ng-repeat="chord in myData.chords">
       <div chord class="chord"></div>
@@ -52,7 +55,7 @@
   </div>
   <footer class="footer">
     <hr>
-      Version: 20150609
+      Version: 20151118
     <h3>Built with:</h3>
     <img src="images/AngularJS-small.png" height="50"><img src="images/d3js.svg" height="50">
     <img src="images/Scala_logo_transparent.png" height="50"><img src="images/Scalatra_Logo.png" height="50">
