@@ -64,6 +64,7 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
   get("/analyze/:fingering") {
     val fingerings = params.get("fingering").get.split(",").map{_.trim}
     implicit val tuning = params.get("tuning").map(t => Tuning(t)).getOrElse(Tuning.StandardTuning)
+    info(s"tuning $tuning")
     val result = fingerings.map { f =>
       val (degrees, name) = chords(f)
       Map("frets" -> frettingToJson(f), "degrees" -> degrees, "name" -> name)
