@@ -8,11 +8,15 @@ class ChordServletSpec extends ScalatraSuite with FunSuiteLike {
   addServlet(classOf[ChordServlet], "/*")
 
   test("GET /chord on ChordServlet") {
-    get("/chord/Am7/") {
-      status should equal(200)
-    }
+//    get("/chord/Am7/") {
+//      status should equal(200)
+//    }
+//
+//    get("/chord/Am7@5/4") {
+//      status should equal(200)
+//    }
 
-    get("/chord/Am7@5/4") {
+    get("/analyze/xx3004?chord=xx3004&tuning=C%23+G%23+C%23+D%23+C%23+E") {
       status should equal(200)
     }
   }
