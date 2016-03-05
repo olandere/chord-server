@@ -180,4 +180,6 @@ angular.module('chordApp.directives', []).
       controller: controller,
       link: linker
     };
+  }).directive("chordInput", function () {
+
   });

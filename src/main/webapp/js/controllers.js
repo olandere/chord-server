@@ -1,12 +1,8 @@
 'use strict';
 
-var chordApp = angular.module('chordApp', ['chordApp.directives', 'angularSpinner']);
+var chordApp = angular.module('chordApp', ['chordApp.directives', 'angularSpinner', 'chordApp.filters']);
 
-chordApp.filter('musicNotation', function(){
-    return function(a){
-        return a.replace(/b/g, '\u266D').replace(/#/g, '\u266F');
-    };
-}).controller("ChordListCtrl", ['$scope', '$http', 'usSpinnerService', function ($scope, $http, usSpinnerService) {
+chordApp.controller("ChordListCtrl", ['$scope', '$http', 'usSpinnerService', function ($scope, $http, usSpinnerService) {
   //    $scope.drawChordChart = drawChordChart;
   $scope.myData = {};
   $scope.isDisabled = false;
@@ -39,8 +35,7 @@ chordApp.filter('musicNotation', function(){
     });
   };
   $scope.onChange = function () {
-    $scope.myData.chord = $scope.myData.chord.replace(/b/g, '\u266D');
-    $scope.myData.chord = $scope.myData.chord.replace(/#/g, '\u266F');
+    $scope.myData.chord = $scope.myData.chord.replace(/b/g, '\u266D').replace(/#/g, '\u266F');
   }
 
 }]);
