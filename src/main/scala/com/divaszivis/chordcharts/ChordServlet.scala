@@ -14,7 +14,9 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
   protected implicit val jsonFormats: Formats = DefaultFormats
 
   before() {
-	contentType = formats("json")
+    response.headers ++= List(("X-XSS-Protection", "1; mode=block"),
+      ("X-Frame-Options", "DENY"), ("X-Content-Type-Options", "nosniff"))
+	  contentType = formats("json")
   }
 
   private def frettingToJson(c: String)(implicit tuning: Tuning): List[Any] =
