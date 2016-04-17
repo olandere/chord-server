@@ -22,9 +22,9 @@ angular.module('chordApp.directives', []).
 
       var computeAdjustment = function (numFrets, chord) {
         var minFret = _.min(_.filter(chord, function (v) {
-          return v > 0;
+          return _.isNumber(v) && v > 0;
         }));
-        var maxFret = _.max(chord);
+        var maxFret = _.max(_.filter(chord, _.isNumber));
         var fretMarker = 0;
         var span = maxFret - minFret + 1;
         if (maxFret > numFrets) {
