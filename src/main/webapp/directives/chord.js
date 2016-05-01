@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('chordApp.directives', []).
+angular.module('chordApp.directives', ['ngCookies']).
   directive("chord", function () {
     var linker = function (scope, element, attrs) {
       var numFrets = 6;
@@ -182,4 +182,16 @@ angular.module('chordApp.directives', []).
     };
   }).directive("chordInput", function () {
 
-  });
+  }).
+directive("editSelect", function ($cookies) {
+  var controller = function($scope) {
+    $scope.tunings = $cookies.getObject("tunings");
+  };
+  return {
+    restrict: 'E',
+    templateUrl: '/directives/editSelect.html',
+    controllerAs: 'editSelect',
+    controller: controller
+  };
+}
+);

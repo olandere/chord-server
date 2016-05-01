@@ -1,12 +1,16 @@
 <!doctype html>
-<html ng-app="chordApp">
+<html ng-app="chordApp" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Cache-Control" content="public">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/app.css">
     <script src="bower_components/angular/angular.min.js" charset="utf-8"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.min.js" charset="utf-8"></script>
     <script src="bower_components/lodash/dist/lodash.min.js" charset="utf-8"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js" charset="utf-8"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js" charset="utf-8"></script>
     <script src="node_modules/angular-spinner/node_modules/spin.js/spin.min.js"></script>
     <script src="bower_components/d3/d3.min.js" charset="utf-8"></script>
     <script src="node_modules/angular-spinner/angular-spinner.min.js" charset="utf-8"></script>
@@ -18,7 +22,7 @@
 <body ng-controller="ChordListCtrl">
 <div class="container-fluid">
   <h1>Chord charts - beta</h1>
-  <form class="form-inline">
+  <form novalidate class="form-inline">
     <div class="form-group">
       <label title="Examples: CM7, Aadd9, F&#x266f;m7&#x266d;5, x 0 2 2 1 0">Chord:</label>
       <input type="text"
@@ -26,7 +30,7 @@
              ng-change="onChange()"
              class="form-control"
              placeholder="Enter chord(s) here"
-             required>
+             ng-required=true>
     </div>
     <div class="form-group">
       <label title="">Fret span:</label><input type="number"
@@ -43,10 +47,9 @@
       <div class="checkbox">
         <label ><input type="checkbox" class="form-control" ng-model="myData.condense"> Condense</label></div>
     <div class="form-group">
-      <label>Tuning:</label>
-      <input type="text" ng-model="myData.tuning" class="form-control" placeholder="E A D G B E" value="E A D G B E">
+      <label>Tuning:</label><edit-select></edit-select>
     </div>
-    <button ng-disabled="isDisabled" ng-click="myData.doClick(item, $event)" class="btn btn-primary">Submit</button>
+    <input type="submit" ng-disabled="isDisabled" ng-click="myData.doClick(item, $event)" class="btn btn-primary"/>
       <a href="help.html">How do I use this???</a>
   </form>
   <hr>
@@ -58,7 +61,7 @@
   </div>
   <footer class="footer">
     <hr>
-      Version: 20160416
+      Version: 20160501
     <h3>Built with:</h3>
     <img src="images/AngularJS-small.png" height="50"><img src="images/d3js.svg" height="50">
     <img src="images/Scala_logo_transparent.png" height="50"><img src="images/Scalatra_Logo.png" height="50">

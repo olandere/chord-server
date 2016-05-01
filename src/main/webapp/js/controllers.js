@@ -1,11 +1,14 @@
 'use strict';
 
-var chordApp = angular.module('chordApp', ['chordApp.directives', 'angularSpinner', 'chordApp.filters']);
+var chordApp = angular.module('chordApp', ['chordApp.directives', 'angularSpinner', 'ngCookies', 'chordApp.filters']);
 
-chordApp.controller("ChordListCtrl", ['$scope', '$http', 'usSpinnerService', function ($scope, $http, usSpinnerService) {
+chordApp.controller("ChordListCtrl", ['$scope', '$http', 'usSpinnerService', '$cookies', function ($scope, $http, usSpinnerService, $cookies) {
   //    $scope.drawChordChart = drawChordChart;
   $scope.myData = {};
-  $scope.isDisabled = false;
+  $scope.isDisabled = true;
+  $scope.changeTuning = function(tuning) {
+    $scope.myData.tuning = tuning;
+  };
   $scope.myData.doClick = function (item, event) {
     usSpinnerService.spin('spinner-1');
     $scope.isDisabled = true;
@@ -17,10 +20,22 @@ chordApp.controller("ChordListCtrl", ['$scope', '$http', 'usSpinnerService', fun
     } else {
       url = "/analyze/" + encodeURIComponent($scope.myData.chord.trim());
     }
+
+    // store tuning
+    var tuning = $scope.myData.tuning || "EADGBE";
+    var tunings = $cookies.getObject("tunings");
+    if (_.isArray(tunings)) {
+      tunings.push(tuning);
+      $cookies.putObject("tunings", _.uniq(tunings));
+    } else {
+      $cookies.putObject("tunings", [tuning]);
+    }
+    $scope.tunings = $cookies.getObject("tunings");
+
     var responsePromise = $http.get(url, {
         params: {
             "chord": encodeURIComponent($scope.myData.chord.trim()),
-            "tuning": $scope.myData.tuning || "E A D G B E",
+            "tuning": tuning,
             "condense": $scope.myData.condense}});
 
     responsePromise.success(function (data, status, headers, config) {
@@ -35,7 +50,12 @@ chordApp.controller("ChordListCtrl", ['$scope', '$http', 'usSpinnerService', fun
     });
   };
   $scope.onChange = function () {
-    $scope.myData.chord = $scope.myData.chord.replace(/b/g, '\u266D').replace(/#/g, '\u266F');
+    if (!_.isUndefined($scope.myData.chord)) {
+      $scope.myData.chord = $scope.myData.chord.replace(/b/g, '\u266D').replace(/#/g, '\u266F');
+      $scope.isDisabled = false;
+    } else {
+      $scope.isDisabled = true;
+    }
   }
 
 }]);
