@@ -56,7 +56,7 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
 
     if (!name.isValid) halt(400) else {
       val span = params.getOrElse("span", "6").toInt
-      val tuning = params.get("tuning").map(t => Tuning(t)).getOrElse(Tuning.StandardTuning)
+      val tuning = params.get("tuning").map(t => TuningParser(t)).getOrElse(Tuning.StandardTuning)
       info(s"/chord/$name/$span")
       info(s"tuning: $tuning")
       showFingerings(name, span, fret, condense)
@@ -65,7 +65,7 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
 
   get("/analyze/:fingering") {
     val fingerings = params.get("fingering").get.split(",").map{_.trim}
-    implicit val tuning = params.get("tuning").map(t => Tuning(t)).getOrElse(Tuning.StandardTuning)
+    implicit val tuning = params.get("tuning").map(t => TuningParser(t)).getOrElse(Tuning.StandardTuning)
     info(s"tuning $tuning")
     val result = fingerings.map { f =>
       val (degrees, name) = chords(f)
@@ -86,7 +86,7 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
     val condense = params.getOrElse("condense", "false").toBoolean
     info(s"received $chords")
     val span = params.getOrElse("span", "6").toInt
-    implicit val tuning = params.get("tuning").map(t => Tuning(t)).getOrElse(Tuning.StandardTuning)
+    implicit val tuning = params.get("tuning").map(t => TuningParser(t)).getOrElse(Tuning.StandardTuning)
     info(s"tuning: $tuning")
     if (chords.size == 1) {
       showFingerings(chords.head._1, span, chords.head._2, condense)

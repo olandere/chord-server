@@ -6,9 +6,11 @@
   "license": "",
   "private": true,
   "dependencies": {
-    "angular": "1.5.x",
-    "angular-mocks": "1.5.x",
+    "angular": "1.5.5",
+    "angular-mocks": "1.5.5",
+    "angular-cookies": "1.5.5",
     "bootstrap": "3.3.x",
+    "jquery": "1.9.1 - 2",
     "lodash": "4.11.x",
     "d3": "3.5.x"
   }
