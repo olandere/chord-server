@@ -1,0 +1,5 @@
+{
+  "excludeFiles": [".jscsrc"],
+  "preset": "airbnb",
+  "maximumLineLength": 120
+}

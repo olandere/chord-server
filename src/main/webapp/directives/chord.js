@@ -1,14 +1,17 @@
-'use strict';
+(function() {
+  'use strict';
 
-angular.module('chordApp.directives', ['ngCookies']).
-  directive("chord", function () {
-    var linker = function (scope, element, attrs) {
+  angular
+    .module('chordApp.directives', ['ngCookies'])
+    .directive('chord', function() {
+    var linker = function(scope, element, attrs) {
       var numFrets = 6;
       var chord = scope.chord.frets;
       var degrees = scope.chord.degrees;
       var name = scope.chord.name;
 
       var numStrings = chord.length;
+
       //Width and height
       var w = 11 * numStrings;
       var h = 10 + 10 * numFrets;
@@ -16,12 +19,12 @@ angular.module('chordApp.directives', ['ngCookies']).
       var topPad = 25;
       var bottomPad = 20;
 
-      var svg = d3.select(element[0]).append("svg").attr("width", w + padding).attr("height", h + topPad + bottomPad);
+      var svg = d3.select(element[0]).append('svg').attr('width', w + padding).attr('height', h + topPad + bottomPad);
 
       var frets = [];
 
-      var computeAdjustment = function (numFrets, chord) {
-        var minFret = _.min(_.filter(chord, function (v) {
+      var computeAdjustment = function(numFrets, chord) {
+        var minFret = _.min(_.filter(chord, function(v) {
           return _.isNumber(v) && v > 0;
         }));
         var maxFret = _.max(_.filter(chord, _.isNumber));
@@ -34,6 +37,7 @@ angular.module('chordApp.directives', ['ngCookies']).
             fretMarker = minFret;
           }
         }
+
         return fretMarker;
       };
 
@@ -48,42 +52,42 @@ angular.module('chordApp.directives', ['ngCookies']).
         frets.push(i);
       }
 
-      var chordElem = svg.append("g");
-      chordElem.append("text").attr("text-anchor", "middle").attr("transform", "translate(0, 12)").attr("x",
+      var chordElem = svg.append('g');
+      chordElem.append('text').attr('text-anchor', 'middle').attr('transform', 'translate(0, 12)').attr('x',
         (w + padding) /
-        2).attr("y",
+        2).attr('y',
         0).text(name);
 
-      var stringLines = chordElem.append("g").selectAll("line")
+      var stringLines = chordElem.append('g').selectAll('line')
         .data(chord)
         .enter()
-        .append("line");
+        .append('line');
 
-      stringLines.attr("x1", function (d, i) {
-        return stringScale(i);
-      })
-        .attr("x2", function (d, i) {
+      stringLines.attr('x1', function(d, i) {
           return stringScale(i);
         })
-        .attr("y1", fretScale(0))
-        .attr("y2", fretScale(numFrets - 1))
-        .attr("stroke", "black");
+        .attr('x2', function(d, i) {
+          return stringScale(i);
+        })
+        .attr('y1', fretScale(0))
+        .attr('y2', fretScale(numFrets - 1))
+        .attr('stroke', 'black');
 
-      var fretLines = chordElem.append("g").selectAll("line")
+      var fretLines = chordElem.append('g').selectAll('line')
         .data(frets)
         .enter()
-        .append("line");
+        .append('line');
 
-      fretLines.attr("y1", function (d, i) {
-        return fretScale(i);
-      })
-        .attr("y2", function (d, i) {
+      fretLines.attr('y1', function(d, i) {
           return fretScale(i);
         })
-        .attr("x1", stringScale(0))
-        .attr("x2", stringScale(numStrings - 1))
-        .attr("stroke", "black")
-        .attr("stroke-width", function (d, i) {
+        .attr('y2', function(d, i) {
+          return fretScale(i);
+        })
+        .attr('x1', stringScale(0))
+        .attr('x2', stringScale(numStrings - 1))
+        .attr('stroke', 'black')
+        .attr('stroke-width', function(d, i) {
           if (i == 0 && fretAdj == 0) {
             return 3;
           } else {
@@ -91,29 +95,30 @@ angular.module('chordApp.directives', ['ngCookies']).
           }
         });
 
-      var dots = chordElem.append("g").attr("transform",
-        "translate(0," + (-h / (2 * (numFrets - 1))) + ")").selectAll("circle")
+      var dots = chordElem.append('g').attr('transform',
+        'translate(0,' + (-h / (2 * (numFrets - 1))) + ')').selectAll('circle')
         .data(chord)
         .enter()
-        .append("circle");
+        .append('circle');
 
-      dots.attr("cx", function (d, i) {
-        return stringScale(i);
-      })
-        .attr("cy", function (d, i) {
+      dots.attr('cx', function(d, i) {
+          return stringScale(i);
+        })
+        .attr('cy', function(d) {
           if (d == 'x') {
             return 0;
           }
+
           return (d == 0) ? fretScale(0) : fretScale(d + fretAdj);
-        }).attr("style", function (d, i) {
+        }).attr('style', function(d, i) {
           if (d != 0) {
-            return "fill: black";
+            return 'fill: black';
           } else {
-            return "fill: white";
+            return 'fill: white';
           }
         })
-        .attr("stroke", "black")
-        .attr("r", function (d, i) {
+        .attr('stroke', 'black')
+        .attr('r', function(d) {
           if (d == 'x') {
             return 0;
           } else {
@@ -121,49 +126,49 @@ angular.module('chordApp.directives', ['ngCookies']).
           }
         });
 
-      var crosses = chordElem.append("g").attr("transform", "translate(0, -2)").selectAll("text")
+      var crosses = chordElem.append('g').attr('transform', 'translate(0, -2)').selectAll('text')
         .data(chord)
         .enter()
-        .append("text");
+        .append('text');
 
-      crosses.attr("x", function (d, i) {
-        return stringScale(i);
-      })
-        .attr("y", function (d, i) {
+      crosses.attr('x', function(d, i) {
+          return stringScale(i);
+        })
+        .attr('y', function(d, i) {
           return fretScale(0);
         })
-        .attr("text-anchor", "middle")
-        .text(function (d) {
+        .attr('text-anchor', 'middle')
+        .text(function(d) {
           if (d == 'x') {
             return '\u00D7';
           }
         });
 
       if (fretMarker > 0) {
-        chordElem.append("g").append("text").text(fretMarker).attr("y", fretScale(1)).attr("x", function () {
-          if (fretMarker < 10) {
-            return 13;
-          } else {
-            return 14;
-          }
-        })
-          .attr("text-anchor", "end");
+        chordElem.append('g').append('text').text(fretMarker).attr('y', fretScale(1)).attr('x', function() {
+            if (fretMarker < 10) {
+              return 13;
+            } else {
+              return 14;
+            }
+          })
+          .attr('text-anchor', 'end');
       }
 
       // show chord degrees
-      var chordDegrees = chordElem.append("g").selectAll("text")
+      var chordDegrees = chordElem.append('g').selectAll('text')
         .data(degrees)
         .enter()
-        .append("text");
+        .append('text');
 
-      chordDegrees.attr("x", function (d, i) {
-        return stringScale(i);
-      })
-        .attr("y", function (d, i) {
+      chordDegrees.attr('x', function(d, i) {
+          return stringScale(i);
+        })
+        .attr('y', function(d, i) {
           return fretScale(numFrets);
         })
-        .attr("text-anchor", "middle")
-        .text(function (d) {
+        .attr('text-anchor', 'middle')
+        .text(function(d) {
           if (d == 'x') {
             return '\u00D7'
           } else {
@@ -172,26 +177,44 @@ angular.module('chordApp.directives', ['ngCookies']).
         });
 
     };
-    var controller = function ($scope) {
+
+    var controller = function($scope) {
       // Pending
     };
+
     return {
       restrict: 'A',
       controller: controller,
       link: linker
     };
-  }).directive("chordInput", function () {
+  }).directive('chordInput', function() {
 
-  }).
-directive("editSelect", function ($cookies) {
-  var controller = function($scope) {
-    $scope.tunings = $cookies.getObject("tunings");
-  };
-  return {
-    restrict: 'E',
-    templateUrl: '/directives/editSelect.html',
-    controllerAs: 'editSelect',
-    controller: controller
-  };
-}
-);
+  }).directive('editSelect', function(tuningService) {
+      var controller = function($scope) {
+        $scope.tunings = tuningService.getTunings();
+      };
+
+      return {
+        restrict: 'E',
+        templateUrl: '/directives/editSelect.html',
+        controllerAs: 'editSelect',
+        controller: controller
+      };
+    }
+
+  ).directive('notesymbols', ['$filter', function($filter) {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, modelCtrl) {
+        return modelCtrl.$formatters.push(function(input) {
+          if (input == null) {
+            return;
+          }
+
+          input = input.toString();
+          return $filter('transformSymbols')(input);
+        })
+      }
+    }
+  }]);
+})();

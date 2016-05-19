@@ -1,63 +1,64 @@
-'use strict';
+(function () {
+  'use strict';
 
-var chordApp = angular.module('chordApp', ['chordApp.directives', 'angularSpinner', 'ngCookies', 'chordApp.filters']);
+  angular
+    .module('chordApp', ['chordApp.directives', 'angularSpinner', 'ngCookies', 'chordApp.filters'])
+    .controller("ChordListCtrl", chordListController);
 
-chordApp.controller("ChordListCtrl", ['$scope', '$http', 'usSpinnerService', '$cookies', '$filter', function ($scope, $http, usSpinnerService, $cookies, $filter) {
-  //    $scope.drawChordChart = drawChordChart;
-  $scope.myData = {};
-  $scope.isDisabled = true;
+  chordListController.$inject = ['tuningService', '$http', 'usSpinnerService', '$filter'];
 
-  $scope.changeTuning = function(tuning) {
-    $scope.myData.tuning = $filter('transformSymbols')(tuning);
-  };
+  function chordListController(tuningService, $http, usSpinnerService, $filter) {
 
-  $scope.myData.doClick = function (item, event) {
-    usSpinnerService.spin('spinner-1');
-    $scope.isDisabled = true;
-    $scope.myData.chords = [];
-    var url, firstChar = $scope.myData.chord.trim().charAt(0);
-    if (firstChar.match(/[abcdefgrs]/i)) {
-      url = ($scope.myData.shell ? "/shellchord/" : "/chords/") +
-        ($scope.myData.fretSpan || 4);
-    } else {
-      url = "/analyze/" + encodeURIComponent($scope.myData.chord.trim());
-    }
+    var vm = this;
 
-    // store tuning
-    var tuning = $scope.myData.tuning || "EADGBE";
-    var tunings = $cookies.getObject("tunings");
-    if (_.isArray(tunings)) {
-      tunings.push(tuning);
-      $cookies.putObject("tunings", _.uniq(tunings));
-    } else {
-      $cookies.putObject("tunings", [tuning]);
-    }
-    $scope.tunings = $cookies.getObject("tunings");
+    vm.myData = {};
+    vm.isDisabled = true;
 
-    var responsePromise = $http.get(url, {
-      params: {
-        "chord": encodeURIComponent($scope.myData.chord.trim()),
-        "tuning": tuning,
-        "condense": $scope.myData.condense
+    vm.changeTuning = function (tuning) {
+      vm.myData.tuning = $filter('transformSymbols')(tuning);
+    };
+
+    vm.myData.doClick = function (item, event) {
+      usSpinnerService.spin('spinner-1');
+      vm.isDisabled = true;
+      vm.myData.chords = [];
+      var url, firstChar = vm.myData.chord.trim().charAt(0);
+      if (firstChar.match(/[abcdefgrs]/i)) {
+        url = (vm.myData.shell ? "/shellchord/" : "/chords/") +
+          (vm.myData.fretSpan || 4);
+      } else {
+        url = "/analyze/" + encodeURIComponent(vm.myData.chord.trim());
       }
-    }).then(function successCallback(response) {
-      $scope.myData.chords = response.data;
-      usSpinnerService.stop('spinner-1');
-      $scope.isDisabled = false;
-    }, function errorCallback(response) {
-      alert("Unable to parse " + response.config.params.chord);
-      usSpinnerService.stop('spinner-1');
-      $scope.isDisabled = false;
-    });
-  };
 
-  $scope.onChange = function () {
-    if (!_.isUndefined($scope.myData.chord)) {
-      $scope.myData.chord = $filter('transformSymbols')($scope.myData.chord);
-      $scope.isDisabled = false;
-    } else {
-      $scope.isDisabled = true;
+      // store tuning
+      var tuning = vm.myData.tuning || "EADGBE";
+      tuningService.addTuning(tuning);
+
+      var responsePromise = $http.get(url, {
+        params: {
+          "chord": encodeURIComponent(vm.myData.chord.trim()),
+          "tuning": tuning,
+          "condense": vm.myData.condense
+        }
+      }).then(function successCallback(response) {
+        vm.myData.chords = response.data;
+        usSpinnerService.stop('spinner-1');
+        vm.isDisabled = false;
+      }, function errorCallback(response) {
+        alert("Unable to parse " + response.config.params.chord);
+        usSpinnerService.stop('spinner-1');
+        vm.isDisabled = false;
+      });
+    };
+
+    vm.onChange = function () {
+      if (!_.isUndefined(vm.myData.chord)) {
+        vm.myData.chord = $filter('transformSymbols')(vm.myData.chord);
+        vm.isDisabled = false;
+      } else {
+        vm.isDisabled = true;
+      }
     }
-  }
 
-}]);
+  };
+})();
