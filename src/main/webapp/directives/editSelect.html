@@ -1,9 +1,9 @@
 <div class="input-group">
-    <input type="text" class="form-control" ng-model="myData.tuning" placeholder="EADGBE">
+    <input type="text" class="form-control" ng-model="chord.myData.tuning" placeholder="EADGBE" notesymbols>
     <div class="input-group-btn">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
         <ul id="tuning-dropdown-menu" class="dropdown-menu dropdown-menu-right" role="menu">
-            <li ng-repeat="tuning in tunings"><a href="#" ng-click="changeTuning(tuning)">{{tuning}}</a></li>
+            <li ng-repeat="tuning in tunings"><a href="#" ng-click="chord.changeTuning(tuning)">{{tuning | transformSymbols}}</a></li>
         </ul>
     </div>
 </div>
