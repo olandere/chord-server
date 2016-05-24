@@ -30,3 +30,11 @@ g>circle {
   margin-top: 60px;
   margin-bottom: 0px;
 }
+
+.chordBlock {
+  background-color: hsl(180, 100%, 99.6%);
+  border: 1px solid hsl(0, 0%, 88%);
+  margin: 4px;
+  display: flex;
+  float: left;
+}
