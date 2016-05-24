@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('chordApp.directives', ['ngCookies'])
+    .module('chordApp')
     .directive('chord', function() {
     var linker = function(scope, element, attrs) {
       var numFrets = 6;

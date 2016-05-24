@@ -19,7 +19,7 @@
     }
 
     function addTuning(tuning) {
-      var tunings = $cookies.getObject('tunings');
+      var tunings = getTunings();
       if (_.isArray(tunings)) {
         tunings.push(tuning);
         $cookies.putObject('tunings', _.uniq(tunings));
