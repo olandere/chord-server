@@ -37,4 +37,5 @@ g>circle {
   margin: 4px;
   display: flex;
   float: left;
+  border-radius: 15px;
 }
