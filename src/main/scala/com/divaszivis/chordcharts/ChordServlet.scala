@@ -72,7 +72,8 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
       Map("frets" -> frettingToJson(f), "degrees" -> degrees, "name" -> name)
     }
     println(result)
-    result.toList
+    Map("numChords" -> 1,
+      "chordList" -> result.toList)
     // val chord = Chord.unapply(fingering)
     // List(Map("frets" -> frettingToJson(fingering), "degrees" -> "", "name" -> ""))
   }
@@ -89,12 +90,14 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
     implicit val tuning = params.get("tuning").map(t => TuningParser(t)).getOrElse(Tuning.StandardTuning)
     info(s"tuning: $tuning")
     if (chords.size == 1) {
-      showFingerings(chords.head._1, span, chords.head._2, condense)
+      Map("numChords" -> chords.size,
+        "chordList" -> showFingerings(chords.head._1, span, chords.head._2, condense))
     } else {
       val chordList = chords.map {
         _._1
       }
-      progression(chordList, span).flatten.zip((Stream continually chordList).flatten).map { case (f, c) => fretlistToJson(f, c)}
+      Map("numChords" -> chords.size,
+      "chordList" -> progression(chordList, span).flatten.zip((Stream continually chordList).flatten).map { case (f, c) => fretlistToJson(f, c)}.grouped(chords.size).toList)
     }
   }
 

@@ -57,12 +57,22 @@
   </form>
   <hr>
   <span us-spinner="{lines: 11, length: 0, width: 14, radius: 28, opacity:0.05}" spinner-key="spinner-1"></span>
-  <div class="chords">
-    <div ng-repeat="chord in chord.myData.chords">
-      <div chord class="chord"></div>
+    <div class="chords" ng-if="chord.myData.chords.numChords > 1">
+        <div ng-repeat="chordBlock in chord.myData.chords.chordList">
+            <div class="chordBlock">
+                <div ng-repeat="chord in chordBlock">
+                    <div chord class="chord"></div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <footer class="footer">
+    <div class="chords" ng-if="chord.myData.chords.numChords === 1">
+        <div ng-repeat="chord in chord.myData.chords.chordList">
+            <div chord class="chord"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
     <hr>
       Version: 20160501
     <h3>Built with:</h3>
