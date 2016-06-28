@@ -21,5 +21,10 @@ class ChordServletSpec extends ScalatraSuite with FunSuiteLike {
     }
   }
 
+  test("GET e,a") {
+    get("/chords/4?chord=e%252Ca&condense=false&tuning=dadgaf") {
+      status should equal(200)
+    }
+  }
 
 }

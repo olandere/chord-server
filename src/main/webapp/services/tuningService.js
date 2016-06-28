@@ -27,8 +27,5 @@
         $cookies.putObject('tunings', [tuning]);
       }
     }
-
   }
-
 })();
-

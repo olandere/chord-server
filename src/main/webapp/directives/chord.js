@@ -200,6 +200,16 @@
         controllerAs: 'editSelect',
         controller: controller
       };
+
+      //var onChange = function() {
+      //  if (!_.isUndefined($scope.myData.chord)) {
+      //    vm.myData.chord = $filter('transformSymbols')(vm.myData.chord);
+      //    vm.isDisabled = false;
+      //  } else {
+      //    vm.isDisabled = true;
+      //  }
+      //}
+
     }
 
   ).directive('notesymbols', ['$filter', function($filter) {

@@ -1,10 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html ng-app="chordApp" xmlns="http://www.w3.org/1999/html">
 <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Cache-Control" content="public">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/app.css">
     <script src="bower_components/angular/angular.min.js" charset="utf-8"></script>
     <script src="bower_components/angular-cookies/angular-cookies.min.js" charset="utf-8"></script>
@@ -25,33 +26,43 @@
 <body ng-controller="ChordListCtrl as chord">
 <div class="container-fluid">
   <h1>Chord charts - beta</h1>
-  <form novalidate class="form-inline">
+  <form novalidate class="form-inline" role="form">
     <div class="form-group">
-      <label title="Examples: CM7, Aadd9, F&#x266f;m7&#x266d;5, x 0 2 2 1 0">Chord:</label>
+      <label title="Examples: CM7, Aadd9, F&#x266f;m7&#x266d;5, x 0 2 2 1 0">Chord:
       <input type="text"
              ng-model="chord.myData.chord"
              ng-change="chord.onChange()"
              class="form-control"
              placeholder="Enter chord(s) here"
              ng-required=true>
+      </label>
     </div>
     <div class="form-group">
-      <label title="">Fret span:</label><input type="number"
+      <label title="">Fret span: <input type="number"
                                                class="form-control"
                                                ng-model="chord.myData.fretSpan"
                                                value="4"
                                                placeholder="4"
                                                min="1"
                                                max="12"
-                                               ng-maxlength=2>
+                                               ng-maxlength=2></label>
     </div>
+      <div class="form-group">
+          <label>Tuning: <edit-select></edit-select></label>
+      </div>
       <div class="checkbox">
-        <label ><input type="checkbox" class="form-control" ng-model="chord.myData.shell"> Shell</label></div>
+      <label>
+          <input type="checkbox" ng-model="chord.myData.shell">Shell
+      </label></div>
       <div class="checkbox">
-        <label ><input type="checkbox" class="form-control" ng-model="chord.myData.condense"> Condense</label></div>
-    <div class="form-group">
-      <label>Tuning:</label><edit-select></edit-select>
-    </div>
+      <label>
+          <input type="checkbox" ng-model="chord.myData.condense">Condense
+      </label></div>
+          <div class="checkbox">
+      <label>
+          <input type="checkbox" ng-model="chord.myData.jazz">Jazz voicings only
+      </label></div>
+
     <input type="submit" ng-disabled="chord.isDisabled" ng-click="chord.myData.doClick(item, $event)" class="btn btn-primary"/>
       <a href="help.html">How do I use this???</a>
   </form>
@@ -74,7 +85,7 @@
 
     <footer class="footer">
     <hr>
-      Version: 20160524
+      Version: 20160628
     <h3>Built with:</h3>
     <img src="images/AngularJS-small.png" height="50"><img src="images/d3js.svg" height="50">
     <img src="images/Scala_logo_transparent.png" height="50"><img src="images/Scalatra_Logo.png" height="50">

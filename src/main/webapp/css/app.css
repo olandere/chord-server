@@ -39,3 +39,12 @@ g>circle {
   float: left;
   border-radius: 15px;
 }
+
+@media (min-width: 768px) {
+  .form-inline .radio input[type="radio"],
+  .form-inline .checkbox input[type="checkbox"] {
+    float: left;
+    margin-right: 5px;
+    margin-left: 5px;
+  }
+}
