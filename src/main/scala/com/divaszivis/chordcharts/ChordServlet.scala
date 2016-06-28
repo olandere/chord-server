@@ -1,15 +1,17 @@
 package com.divaszivis.chordcharts
 
+import chord.Operations._
+import chord._
 import grizzled.slf4j.Logging
+import org.json4s.{DefaultFormats, Formats}
+import org.scalatra.ContentEncodingSupport
 import org.scalatra.json._
 import org.scalatra.util.RicherString._
-import org.json4s.{DefaultFormats, Formats}
-import chord._
-import chord.Operations._
-import scalaz._, syntax.show._
-import scala.util.Try
 
-class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging {
+import scala.util.Try
+import scalaz.syntax.show._
+
+class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging with ContentEncodingSupport {
 
   protected implicit val jsonFormats: Formats = DefaultFormats
 
@@ -31,8 +33,8 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
       "name" -> chord.toString())
   }
 
-  private def showFingerings(chord: Chord, span: Int, fret: Option[Int], condense: Boolean)(implicit tuning: Tuning) = {
-    val result = if (condense) Operations.condense(fingerings(chord, span), span) else fingerings(chord, span)
+  private def showFingerings(chord: Chord, span: Int, fret: Option[Int], condense: Boolean, jazzVoicing: Boolean)(implicit tuning: Tuning) = {
+    val result = if (condense) Operations.condense(fingerings(chord, span, jazzVoicing), span) else fingerings(chord, span, jazzVoicing)
 
     result.filter{c:FretList => fret.isEmpty || c.contains(fret)}.map
     {
@@ -42,8 +44,10 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
 
   // todo - normalize/sanitize chord name - strip whitespace, lower case to Caps, minor/min -> m, Major/maj -> M
 
-  private def normalize(chord: String) =
-    chord.trim().capitalize.split(" ").mkString.replaceAll("[m|M]in(or)?", "m").replaceAll("[m|M]aj(or)?", "M")
+  private def normalize(chord: String) = {
+    val tmp = chord.trim().split(" ").mkString.replaceAll("[m|M]in(or)?", "m").replaceAll("[m|M]aj(or)?", "M")
+    tmp.split(",").map(_.capitalize).mkString(",")
+  }
 
   private def parseChord(c: String) = {
     InputParser(c)
@@ -53,13 +57,14 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
   get("/chord/:span?") {
     val (name, fret) = (params.get("name") map parseChord).get.head
     val condense = params.getOrElse("condense", "false").toBoolean
+    val jazzVoicing = params.getOrElse("jazz", "false").toBoolean
 
     if (!name.isValid) halt(400) else {
       val span = params.getOrElse("span", "6").toInt
       val tuning = params.get("tuning").map(t => TuningParser(t)).getOrElse(Tuning.StandardTuning)
       info(s"/chord/$name/$span")
       info(s"tuning: $tuning")
-      showFingerings(name, span, fret, condense)
+      showFingerings(name, span, fret, condense, jazzVoicing)
     }
   }
 
@@ -85,13 +90,14 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
   def handleChords(parser: InputParser) = {
     val chords = parser(normalize(params.get("chord").get.urlDecode))
     val condense = params.getOrElse("condense", "false").toBoolean
+    val jazzVoicing = params.getOrElse("jazz", "false").toBoolean
     info(s"received $chords")
     val span = params.getOrElse("span", "6").toInt
     implicit val tuning = params.get("tuning").map(t => TuningParser(t)).getOrElse(Tuning.StandardTuning)
     info(s"tuning: $tuning")
     if (chords.size == 1) {
       Map("numChords" -> chords.size,
-        "chordList" -> showFingerings(chords.head._1, span, chords.head._2, condense))
+        "chordList" -> showFingerings(chords.head._1, span, chords.head._2, condense, jazzVoicing))
     } else {
       val chordList = chords.map {
         _._1

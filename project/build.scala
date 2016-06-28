@@ -1,16 +1,15 @@
-import sbt._
-import Keys._
-import org.scalatra.sbt._
-import org.scalatra.sbt.PluginKeys._
+import com.mojolly.scalate.ScalatePlugin.ScalateKeys._
 import com.mojolly.scalate.ScalatePlugin._
-import ScalateKeys._
+import org.scalatra.sbt._
+import sbt.Keys._
+import sbt._
 
 object ChordserverBuild extends Build {
   val Organization = "com.example"
   val Name = "chord-server"
   val Version = "0.1.0-SNAPSHOT"
   val ScalaVersion = "2.11.8"
-  val ScalatraVersion = "2.4.0"
+  val ScalatraVersion = "2.4.1"
 
   lazy val project = Project(
     "chord-server",

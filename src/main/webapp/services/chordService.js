@@ -18,20 +18,21 @@
       return doGet('/analyze/' + encodeURIComponent(fingering.trim()), fingering, tuning, false);
     }
 
-    function shellchord(fretspan, chord, tuning, condense) {
-      return doGet('/shellchord/' + fretspan, chord, tuning, condense);
+    function shellchord(fretspan, chord, tuning, condense, jazz) {
+      return doGet('/shellchord/' + fretspan, chord, tuning, condense, jazz);
     }
 
-    function chords(fretspan, chord, tuning, condense) {
-      return doGet('/chords/' + fretspan, chord, tuning, condense);
+    function chords(fretspan, chord, tuning, condense, jazz) {
+      return doGet('/chords/' + fretspan, chord, tuning, condense, jazz);
     }
 
-    function doGet(url, chord, tuning, condense) {
+    function doGet(url, chord, tuning, condense, jazz) {
       return $http.get(url, {
         params: {
           chord: encodeURIComponent(chord.trim()),
           tuning: tuning,
-          condense: condense
+          condense: condense,
+          jazz: jazz
         }
       })
     }

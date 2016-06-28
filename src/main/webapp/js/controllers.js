@@ -13,6 +13,7 @@
 
     vm.myData = {};
     vm.isDisabled = true;
+    vm.myData.jazz = false;
 
     vm.changeTuning = function(tuning) {
       vm.myData.tuning = $filter('transformSymbols')(tuning);
@@ -27,14 +28,16 @@
 
       // store tuning
       var tuning = vm.myData.tuning || 'EADGBE';
-      tuningService.addTuning(tuning);
+      tuningService.addTuning($filter('capitalize')($filter('transformSymbols')(tuning)));
 
       var firstChar = vm.myData.chord.trim().charAt(0);
       if (firstChar.match(/[abcdefgrs]/i)) {
         if (vm.myData.shell) {
-          responsePromise = chordService.shellchord(vm.myData.fretSpan || 4, vm.myData.chord, tuning, vm.myData.condense);
+          responsePromise = chordService.shellchord(vm.myData.fretSpan || 4, vm.myData.chord, tuning,
+            vm.myData.condense, vm.myData.jazz);
         } else {
-          responsePromise = chordService.chords(vm.myData.fretSpan || 4, vm.myData.chord, tuning, vm.myData.condense);
+          responsePromise = chordService.chords(vm.myData.fretSpan || 4, vm.myData.chord, tuning,
+            vm.myData.condense, vm.myData.jazz);
         }
       } else {
         responsePromise = chordService.analyze(vm.myData.chord, tuning, false)
