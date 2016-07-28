@@ -9,7 +9,7 @@ import org.scalatra.json._
 import org.scalatra.util.RicherString._
 
 import scala.util.Try
-import scalaz.syntax.show._
+import cats.implicits._
 
 class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging with ContentEncodingSupport {
 
@@ -28,8 +28,8 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
       ).map(n => Try {n.toInt}.getOrElse("x"))
 
   private def fretlistToJson(c:FretList, chord: Chord)(implicit tuning: Tuning) = {
-    Map("frets" -> frettingToJson(c.shows),
-      "degrees" -> chord.asDegrees(c).shows.split(" "),
+    Map("frets" -> frettingToJson(c.show),
+      "degrees" -> chord.asDegrees(c).show.split(" "),
       "name" -> chord.toString())
   }
 

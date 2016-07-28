@@ -168,6 +168,8 @@
           return fretScale(numFrets);
         })
         .attr('text-anchor', 'middle')
+        .attr("lengthAdjust", "spacing")
+        .attr("textLength", stringScale(1) - stringScale(0))
         .text(function(d) {
           if (d == 'x') {
             return '\u00D7'
