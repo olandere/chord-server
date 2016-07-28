@@ -20,6 +20,7 @@ object ChordserverBuild extends Build {
       version := Version,
       scalaVersion := ScalaVersion,
       resolvers += Classpaths.typesafeReleases,
+      excludeFilter := HiddenFileFilter -- ".ebextensions",
       //  ideaExcludeFolders := Seq(".idea",".idea_modules"),
       libraryDependencies ++= Seq(
         "ch.qos.logback" % "logback-classic" % "1.1.3" % "runtime",
@@ -34,6 +35,7 @@ object ChordserverBuild extends Build {
         "org.json4s" %% "json4s-jackson" % "3.3.0",
         "org.clapper" %% "grizzled-slf4j" % "1.0.2",
         "chords" %% "chords" % "1.0",
+        "org.typelevel" %% "cats" % "0.6.1",
         "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
       ),
       scalateTemplateConfig in Compile <<= (sourceDirectory in Compile) { base =>
