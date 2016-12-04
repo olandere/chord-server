@@ -30,7 +30,9 @@ class ChordServlet extends ChordserverStack with JacksonJsonSupport with Logging
   private def fretlistToJson(c:FretList, chord: Chord)(implicit tuning: Tuning) = {
     Map("frets" -> frettingToJson(c.show),
       "degrees" -> chord.asDegrees(c).show.split(" "),
-      "name" -> chord.toString())
+      "name" -> chord.toString(),
+      "notes" -> notes(chord)(c).show.split(" ")
+    )
   }
 
   private def showFingerings(chord: Chord, span: Int, fret: Option[Int], condense: Boolean, jazzVoicing: Boolean)(implicit tuning: Tuning) = {
