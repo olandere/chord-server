@@ -44,8 +44,8 @@
       var fretMarker = computeAdjustment(numFrets - 1, chord);
       var fretAdj = fretMarker > 0 ? 1 - fretMarker : 0;
 
-      var stringScale = d3.scale.linear().domain([0, numStrings - 1]).range([padding / 2, w + padding / 2]);
-      var fretScale = d3.scale.linear().domain([0, numFrets - 1]).range([topPad, h + topPad]);
+      var stringScale = d3.scaleLinear().domain([0, numStrings - 1]).range([padding / 2, w + padding / 2]);
+      var fretScale = d3.scaleLinear().domain([0, numFrets - 1]).range([topPad, h + topPad]);
 
       //TODO: can this be replaced/eliminated???
       for (var i = 0; i < numFrets; i++) {

@@ -1,3 +1,4 @@
+import com.earldouglas.xwp.JettyPlugin
 import org.scalatra.sbt._
 
 lazy val root = (project in file(".")).
@@ -6,7 +7,7 @@ lazy val root = (project in file(".")).
     organization := "com.example",
     name := "chord-server",
     version := "0.1.0-SNAPSHOT",
-    scalaVersion := "2.12.0",
+    scalaVersion := "2.12.1",
 
 
     resolvers += Classpaths.typesafeReleases,
