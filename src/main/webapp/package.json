@@ -1,0 +1,22 @@
+{
+  "name": "chord-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "chordApp.js",
+  "dependencies": {
+    "angular-spinner": "^0.8.1",
+    "angular": "1.5.x",
+    "angular-mocks": "1.5.x",
+    "angular-cookies": "1.5.x",
+    "bootstrap": "3.3.x",
+    "jquery": "1.9.1 - 2",
+    "lodash": "4.17.x",
+    "d3": "4.4.x"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
