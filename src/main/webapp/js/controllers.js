@@ -48,7 +48,11 @@
         usSpinnerService.stop('spinner-1');
         vm.isDisabled = false;
       }, function errorCallback(response) {
-        alert('Unable to parse ' + response.config.params.chord);
+        if (response.status === -1) {
+          alert('Unable to reach server');
+        } else {
+          alert('Unable to parse ' + response.config.params.chord);
+        }
         usSpinnerService.stop('spinner-1');
         vm.isDisabled = false;
       });
