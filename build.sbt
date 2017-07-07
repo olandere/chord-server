@@ -7,14 +7,14 @@ lazy val root = (project in file(".")).
     organization := "com.example",
     name := "chord-server",
     version := "0.1.0-SNAPSHOT",
-    scalaVersion := "2.12.1",
+    scalaVersion := "2.12.2",
 
 
     resolvers += Classpaths.typesafeReleases,
     excludeFilter := HiddenFileFilter -- ".ebextensions",
     //  ideaExcludeFolders := Seq(".idea",".idea_modules"),
     libraryDependencies ++= Seq(
-      "ch.qos.logback" % "logback-classic" % "1.1.3" % "runtime",
+      "ch.qos.logback" % "logback-classic" % "1.2.3" % "runtime",
       "org.scalatra" %% "scalatra" % "2.5.0",
       "org.scalatra" %% "scalatra-scalate" % "2.5.0",
       "org.scalatra" %% "scalatra-specs2" % "2.5.0" % "test",
