@@ -33,4 +33,10 @@ class ChordServletSpec extends ScalatraSuite with FunSuiteLike {
     }
   }
 
+  test("GET Cdim7") {
+    get("/chords/4?chord=Cdim7") {
+      status should equal(200)
+    }
+  }
+
 }
