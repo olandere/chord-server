@@ -5,7 +5,7 @@
 ```sh
 $ cd chord-server
 $ ./sbt
-> container:start
+> jetty:start
 > browse
 ```
 
