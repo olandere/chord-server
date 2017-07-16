@@ -4,7 +4,7 @@
 
 ```sh
 $ cd chord-server
-$ ./sbt
+$ sbt
 > jetty:start
 > browse
 ```
