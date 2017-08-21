@@ -32,7 +32,7 @@ class InputParser extends ChordParser with Logging {
     parseAll(parseIt, input) match {
       case Success(result, _) => result
       case failure: NoSuccess =>
-        error(failure.msg)
+        error(s"$input: ${failure.msg}")
         List((InvalidChord, None))
     }
 }
@@ -46,7 +46,7 @@ object ShellInputParser extends InputParser {
     parseAll(parseIt, input) match {
       case Success(result, _) => println(result); result.map { case (c, i) => println(c); (ShellChord(c), i) }
       case failure: NoSuccess =>
-        error(failure.msg)
+        error(s"$input: ${failure.msg}")
         List((InvalidChord, None))
     }
 }
