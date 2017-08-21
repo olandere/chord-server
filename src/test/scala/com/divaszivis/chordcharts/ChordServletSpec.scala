@@ -7,7 +7,7 @@ class ChordServletSpec extends ScalatraSuite with FunSuiteLike {
 
   addServlet(classOf[ChordServlet], "/*")
 
-  test("GET /chord on ChordServlet") {
+  test("GET /analyze on ChordServlet") {
 //    get("/chord/Am7/") {
 //      status should equal(200)
 //    }
@@ -17,8 +17,14 @@ class ChordServletSpec extends ScalatraSuite with FunSuiteLike {
 //    }
 
     get("/analyze/xx3004?chord=xx3004&tuning=C%23+G%23+C%23+D%23+C%23+E") {
-      status should equal(200)
+      status shouldBe 200
     }
+
+    get("/analyze/xx0232?chord=xx0232&condense=false&tuning=EADGBE") {
+      status shouldBe 200
+      println(s"body: $body")
+    }
+
   }
 
   test("GET A5") {
@@ -35,6 +41,18 @@ class ChordServletSpec extends ScalatraSuite with FunSuiteLike {
 
   test("GET Cdim7") {
     get("/chords/4?chord=Cdim7") {
+      status should equal(200)
+    }
+  }
+
+  test("GET C77") {
+    get("/chords/4?chord=C77") {
+      status should equal(200)
+    }
+  }
+
+  test("GET C77 arpeggio") {
+    get("/arpeggio?chord=C77") {
       status should equal(200)
     }
   }
