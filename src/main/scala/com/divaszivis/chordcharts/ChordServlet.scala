@@ -82,7 +82,10 @@ class ChordServlet extends ChordserverStack with NativeJsonSupport with Logging 
     val root = Note(params.get("root").get.urlDecode)
     val scaleName = params.get("scale").get.urlDecode
     implicit val tuning: Tuning = params.get("tuning").map(t => TuningParser(t)).getOrElse(Tuning.StandardTuning)
-    scaleFingering(root, MajorScale(root).semitones)
+    val scale = Scale(root, scaleName)
+    Map("arpeggioList" ->
+    List(Map("frets" -> scaleFingering(root, scale.semitones),
+      "name" -> s"$scale", "roots" -> roots(root))))
   }
 }
 
