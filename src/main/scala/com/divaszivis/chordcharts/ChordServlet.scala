@@ -52,8 +52,10 @@ class ChordServlet extends ChordserverStack with NativeJsonSupport with Logging 
     debug(s"tuning $tuning")
     val result = fingerings.map { f =>
       val (degrees, name, notes) = chords(f)
-      Map("frets" -> frettingToJson(f), "degrees" -> degrees, "name" -> name, "notes" -> notes.show.split(" ").toList)
-    }.toList
+      if (degrees.nonEmpty) {
+        Map("frets" -> frettingToJson(f), "degrees" -> degrees, "name" -> name, "notes" -> notes.show.split(" ").toList)
+      } else Map()
+    }.toList.filter(_.nonEmpty)
     debug(s"result: $result")
     Map("numChords" -> 1,
       "chordList" -> result)
@@ -74,8 +76,9 @@ class ChordServlet extends ChordserverStack with NativeJsonSupport with Logging 
     val chords = InputParser(chordName)
     implicit val tuning: Tuning = params.get("tuning").map(t => TuningParser(t)).getOrElse(Tuning.StandardTuning)
     Map("arpeggioList" ->
-      (for {chord <- chords.map(_._1)}
-        yield Map("frets" -> arpeggio(chord), "name" -> chord.toString(), "roots" -> roots(chord.root))))
+      (for {chord <- chords.map(_._1)
+            if chord.isValid
+      } yield Map("frets" -> arpeggio(chord), "name" -> chord.toString(), "roots" -> roots(chord.root))))
   }
 
   get("/scale") {
@@ -86,6 +89,10 @@ class ChordServlet extends ChordserverStack with NativeJsonSupport with Logging 
     Map("arpeggioList" ->
     List(Map("frets" -> scaleFingering(root, scale.semitones),
       "name" -> s"$scale", "roots" -> roots(root))))
+  }
+
+  get("/supportedScales") {
+    Scale.supportedScales
   }
 }
 
