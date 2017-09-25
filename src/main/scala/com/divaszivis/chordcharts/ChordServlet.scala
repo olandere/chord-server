@@ -1,5 +1,6 @@
 package com.divaszivis.chordcharts
 
+import cats.implicits._
 import chord.Operations._
 import chord._
 import grizzled.slf4j.Logging
@@ -9,7 +10,6 @@ import org.scalatra.json._
 import org.scalatra.util.RicherString._
 
 import scala.util.Try
-import cats.implicits._
 
 class ChordServlet extends ChordserverStack with NativeJsonSupport with Logging with ContentEncodingSupport {
 
