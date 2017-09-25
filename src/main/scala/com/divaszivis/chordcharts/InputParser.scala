@@ -16,7 +16,7 @@ class InputParser extends ChordParser with Logging {
 
   val shell = """(?i)shell""".r ~> ":".? ~> chord ^^ { ch => Shell(ch) }
 
-  val noop = chord ^^ {
+  val noop = (pitchClassWithRoot | chord) ^^ {
     Noop(_)
   }
 
