@@ -10,10 +10,10 @@ class InputParserSpec extends FlatSpec with Matchers {
   }
 
   it should "handle power chords" in {
-    InputParser("A5") shouldNot be(List((InvalidChord, None)))
+    InputParser("A5") shouldNot be(List((InvalidChord, None, None)))
   }
 
   it should "handle invalid input" in {
-    InputParser("A57") shouldBe List((InvalidChord, None))
+    InputParser("A57") shouldBe List((InvalidChord, None, None))
   }
 }
