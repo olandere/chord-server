@@ -33,7 +33,7 @@ class ChordServlet extends ChordserverStack with NativeJsonSupport with Logging 
 
   //todo: collapse API - probably no need for /chord and /chordprogression to be distinct
   get("/chord/:span?") {
-    val (name, fret) = (params.get("name") map parseChord).get.head
+    val (name, fret, topNote) = (params.get("name") map parseChord).get.head
     val condense = params.getOrElse("condense", "false").toBoolean
     val jazzVoicing = params.getOrElse("jazz", "false").toBoolean
 
@@ -42,7 +42,7 @@ class ChordServlet extends ChordserverStack with NativeJsonSupport with Logging 
       val tuning = params.get("tuning").map(t => TuningParser(t)).getOrElse(Tuning.StandardTuning)
       debug(s"/chord/$name/$span")
       debug(s"tuning: $tuning")
-      showFingerings(name, span, fret, condense, jazzVoicing)
+      showFingerings(name, span, fret, topNote, condense, jazzVoicing)
     }
   }
 
@@ -53,7 +53,10 @@ class ChordServlet extends ChordserverStack with NativeJsonSupport with Logging 
     val result = fingerings.map { f =>
       val (degrees, name, notes) = chords(f)
       if (degrees.nonEmpty) {
-        Map("frets" -> frettingToJson(f), "degrees" -> degrees, "name" -> name, "notes" -> notes.show.split(" ").toList)
+        Map("frets" -> frettingToJson(f),
+          "degrees" -> degrees.show.split(" ").toList,
+          "name" -> name,
+          "notes" -> notes.show.split(" ").toList)
       } else Map()
     }.toList.filter(_.nonEmpty)
     debug(s"result: $result")
@@ -110,25 +113,36 @@ object ChordServlet {
    // debug(s"tuning: $tuning")
     if (chords.size == 1) {
       Map("numChords" -> chords.size,
-        "chordList" -> showFingerings(chords.head._1, span, chords.head._2, condense, jazzVoicing))
+        "chordList" -> showFingerings(chords.head._1, span, chords.head._2, chords.head._3, condense, jazzVoicing))
     } else {
       val chordList = chords.map {
         _._1
       }
       Map("numChords" -> chords.size,
-        "chordList" -> progression(chordList, span, jazzVoicing).flatten.zip((Stream continually chordList).flatten).
-          map { case (f, c) => fretlistToJson(f, c)}.grouped(chords.size).toList)
+        "chordList" -> progression(chordList, span, jazzVoicing).flatten.zip((Stream continually chords).flatten).
+          map { case (f, (c, fret, topNote)) => fretlistToJson(applyFilters(c, List(f), fret, topNote).head, c)}.grouped(chords.size).toList)
     }
   }
 
-  def showFingerings(chord: Chord, span: Int, fret: Option[Int], condense: Boolean, jazzVoicing: Boolean)
+  def showFingerings(chord: Chord, span: Int, fret: Option[Int], topNote: Option[Note], condense: Boolean, jazzVoicing: Boolean)
                     (implicit tuning: Tuning): List[Map[String, AnyRef]] = {
+
     val result = if (condense)
       Operations.condense(fingerings(chord, span, jazzVoicing), span)
     else
       fingerings(chord, span, jazzVoicing)
 
-    result.filter{c:FretList => fret.isEmpty || c.contains(fret)}.map { c: FretList => fretlistToJson(c, chord)}
+    applyFilters(chord, result, fret, topNote).map { c: FretList => fretlistToJson(c, chord)}
+  }
+
+  def applyFilters(chord: Chord, fingerings: List[FretList], fret: Option[Int], topNote: Option[Note]): List[FretList] = {
+
+    def highestNote(c:FretList): Note = {
+      notes(chord)(c).filter(_.isDefined).last.get
+    }
+
+    fingerings.filter{c:FretList => fret.isEmpty || c.contains(fret)}.
+      filter{c:FretList => topNote.isEmpty || topNote.contains(highestNote(c))}
   }
 
   def frettingToJson(c: String)(implicit tuning: Tuning): List[Any] =
@@ -152,7 +166,7 @@ object ChordServlet {
     tmp.split(",").map(_.capitalize).mkString(",")
   }
 
-  def parseChord(c: String): List[(Chord, Option[Int])] = {
+  def parseChord(c: String): List[(Chord, Option[Int], Option[Note])] = {
     InputParser(c)
   }
 }
