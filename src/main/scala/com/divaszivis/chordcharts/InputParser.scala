@@ -8,25 +8,26 @@ import grizzled.slf4j.Logging
   */
 class InputParser extends ChordParser with Logging {
 
-  val drop2 = """(?i)d(rop)?2""".r ~> ":".? ~> chord ^^ { ch => Drop2(ch) }
+  val drop2: Parser[Chord] = """(?i)d(rop)?2""".r ~> ":".? ~> chord ^^ { ch => Drop2(ch) }
 
-  val rootPos = """(?i)r(oot)?""".r ~> ":".? ~> chord ^^ { ch => Root(ch) }
+  val rootPos: Parser[Chord] = """(?i)r(oot)?""".r ~> ":".? ~> chord ^^ { ch => Root(ch) }
 
-  val drop24 = """(?i)d(rop)?24""".r ~> ":".? ~> chord ^^ { ch => Drop24(ch) }
+  val drop24: Parser[Chord] = """(?i)d(rop)?24""".r ~> ":".? ~> chord ^^ { ch => Drop24(ch) }
 
-  val shell = """(?i)shell""".r ~> ":".? ~> chord ^^ { ch => Shell(ch) }
+  val shell: Parser[Chord] = """(?i)shell""".r ~> ":".? ~> chord ^^ { ch => Shell(ch) }
 
-  val noop = (pitchClassWithRoot | chord) ^^ {
+  val noop: Parser[Chord] = (pitchClassWithRoot | chord) ^^ {
     Noop(_)
   }
 
-  val atFret = (drop2 | rootPos | drop24 | shell | powerChord | noop) ~ ("@" ~> """\d+""".r).? ~ ("^" ~> root).? ^^ {
+  val atFret: Parser[(Chord, Option[Int], Option[Note])] = (drop2 | rootPos | drop24 | shell | powerChord | noop) ~
+    ("@" ~> """\d+""".r).? ~ ("^" ~> root).? ^^ {
     case c ~ f ~ tn => (c, f.map {
       _.toInt
     }, tn.map{Note(_)})
   }
 
-  def parseIt = repsep(atFret, sep)
+  def parseIt: Parser[List[(Chord, Option[Int], Option[Note])]] = repsep(atFret, sep)
 
   def apply(input: String): List[(Chord, Option[Int], Option[Note])] =
     parseAll(parseIt, input) match {
