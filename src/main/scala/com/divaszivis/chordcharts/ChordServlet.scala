@@ -36,9 +36,10 @@ class ChordServlet extends ChordserverStack with NativeJsonSupport with Logging 
     val (name, fret, topNote) = (params.get("name") map parseChord).get.head
     val condense = params.getOrElse("condense", "false").toBoolean
     val jazzVoicing = params.getOrElse("jazz", "false").toBoolean
+    val span = params.getOrElse("span", "6").toInt
+    info(s"/chord/$name/$span")
 
     if (!name.isValid) halt(400) else {
-      val span = params.getOrElse("span", "6").toInt
       val tuning = params.get("tuning").map(t => TuningParser(t)).getOrElse(Tuning.StandardTuning)
       debug(s"/chord/$name/$span")
       debug(s"tuning: $tuning")
@@ -141,8 +142,8 @@ object ChordServlet {
       notes(chord)(c).filter(_.isDefined).last.get
     }
 
-    fingerings.filter{c:FretList => fret.isEmpty || c.contains(fret)}.
-      filter{c:FretList => topNote.isEmpty || topNote.contains(highestNote(c))}
+    fingerings.filter{c:FretList => (fret.isEmpty || c.contains(fret)) &&
+      (topNote.isEmpty || topNote.contains(highestNote(c)))}
   }
 
   def frettingToJson(c: String)(implicit tuning: Tuning): List[Any] =
