@@ -18,12 +18,11 @@ class ChordServlet extends ChordserverStack with NativeJsonSupport with Logging 
   protected implicit val jsonFormats: Formats = DefaultFormats
 
   before() {
-    response.headers ++= List(
-      ("X-XSS-Protection", "1; mode=block"),
-      ("X-Frame-Options", "DENY"),
-      ("X-Content-Type-Options", "nosniff"),
-      ("Access-Control-Allow-Origin", "*")
-    )
+    response.setHeader("X-XSS-Protection", "1; mode=block")
+    response.setHeader("X-Frame-Options", "DENY")
+    response.setHeader("X-Content-Type-Options", "nosniff")
+    response.setHeader("Access-Control-Allow-Origin", "*")
+
 	  contentType = formats("json")
   }
 
