@@ -5,7 +5,7 @@
   "main": "chordApp.js",
   "dependencies": {
     "angular-spinner": "^0.8.1",
-    "angular": "1.5.x",
+    "angular": "1.7.x",
     "angular-mocks": "1.5.x",
     "angular-cookies": "1.5.x",
     "bootstrap": "3.3.x",
