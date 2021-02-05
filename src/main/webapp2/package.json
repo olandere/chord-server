@@ -9,7 +9,7 @@
     "angular-mocks": "1.5.x",
     "angular-cookies": "1.5.x",
     "bootstrap": "3.3.x",
-    "jquery": "1.9.1 - 2",
+    "jquery": "1.9.1 - 4",
     "lodash": "4.17.x",
     "d3": "4.4.x"
   },
